@@ -4,10 +4,10 @@ import { Link } from "react-router-dom";
 const Contact = ({ contact }) => {
   return (
     // eslint-disable-next-line no-template-curly-in-string
-    <Link to={"/contact/${contact.id}"} className="contact__item">
+    <Link to={`/contacts/${contact.id}`} className="contact__item">
       <div className="contact__header">
         <div className="contact__image">
-          <img src="{contact.photoUrl}" alt="{contact.name}" />
+          <img src={contact.photoUrl} alt={contact.name} />
         </div>
         <div className="contact__details">
           <div className="contact_name">{contact.name.substring(0, 15)}</div>
