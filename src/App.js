@@ -11,29 +11,32 @@ function App() {
   // using the constant getAllContact which calls the funcation
   //getContacts declared in api/ContactService.js file
   const [currentPage, setCurrentPage] = useState(0);
-  const getAllContacts = async (page = 0, size = 10) => {
+  //calling function to get all contacts giving parameter of page and size and then
+  //set the fetched data Using hook to setData to data
+  const getAllContacts = async (page = 0, size = 2) => {
     try {
       setCurrentPage(page);
       const { data } = await getContacts(page, size);
       setData(data);
-      // console.log(data);
+      console.log(data);
     } catch (error) {
       console.log(error);
     }
   };
+
+  // Modal save section start
   // this is for modal section showing modal and saving data of contact
   const modalRef = useRef();
   //handle the contact photo saving and update function
   const photoRef = useRef();
-  const toggleModal = (show) =>
-    show ? modalRef.current.showModal() : modalRef.current.close();
+  const toggleModal = (show) => show ? modalRef.current.showModal() : modalRef.current.close();
 
   const [formValues, setFormValues] = useState({
     name: "",
     email: "",
     address: "",
     phone: "",
-    title: "",
+    titles: "",
     status: "",
   });
   // now bind this formValues instances to html form using value attribute.
@@ -51,14 +54,14 @@ function App() {
     try {
       //calling the method of api and giving the value of form, here the data is the object in response
       const { data } = await saveContact(formValues);
-      console.log(data);
+      // console.log(data);
       //once the data.id is get from the response then we will save the photo as well
       const formData = new FormData();
       formData.append("file", formFile, formFile.name);
       formData.append("id", data.id);
       //here we are sending the photo along with id of the current saving contact
-      const { data: photoUrl } = await updatePhoto(formData);
-      console.log(photoUrl);
+       await updatePhoto(formData);
+      // console.log(photoUrl);
       //closing the toggleModal
       toggleModal(false);
       //setting or emptying the file photo and form values entries
@@ -71,7 +74,7 @@ function App() {
         email: "",
         address: "",
         phone: "",
-        title: "",
+        titles: "",
         status: "",
       });
       //get updated contact list
@@ -80,8 +83,27 @@ function App() {
       console.log(error);
     }
   };
-  //when the page is rendered we will throw this function using useEffect
+  // Modal Section ends here
 
+  // For updateContact and updatedImage we define two const function
+
+  const updateContact= async(contactDate)=>{
+    try {
+      const {data}=await saveContact(contactDate);
+      console.log(data);
+    } catch (error) {
+      
+    }
+  };
+  const updateImage= async(formData)=>{
+    try {
+      // alert("lakjsdf");
+     await updatePhoto(formData);
+    //  console.log(formData);
+    } catch (error) {      
+    }
+  };
+  //when the page is rendered we will throw this function using useEffect
   useEffect(() => {
     getAllContacts();
   }, []);
@@ -93,7 +115,8 @@ function App() {
       <main className="main">
         <div className="container">
           <Routes>
-            <Route path="/" element={<Navigate to={"/contacts"} />}></Route>
+            <Route path={'/'} element={<Navigate to={"/contacts"} />}></Route>
+            <Route path={'/contact'} element={<Navigate to={"/contacts"} />}></Route>
             <Route
               path="/contacts"
               element={
@@ -104,7 +127,15 @@ function App() {
                 />
               }
             ></Route>
-            <Route path="/contacts/:id" element={<ContactDetails />}></Route>
+            <Route
+              path="/contacts/:id"
+              element={
+                <ContactDetails
+                  updateContact={updateContact}
+                  updateImage={updateImage}
+                />
+              }
+            ></Route>
           </Routes>
         </div>
       </main>
@@ -141,10 +172,10 @@ function App() {
               <div className="input-box">
                 <span className="details">Title</span>
                 <input
-                  value={formValues.title}
+                  value={formValues.titles}
                   onChange={onChange}
                   type="text"
-                  name="title"
+                  name="titles"
                   required
                 />
               </div>

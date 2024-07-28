@@ -17,7 +17,7 @@ const ContactList = ({ data, currentPage, getAllContacts }) => {
           ))}
       </ul>
 
-      {data?.content?.lenght > 0 && data?.totalPages > 1 && (
+      {data?.content?.length > 0 && data?.totalPages > 1 && (
         <div className="pagination">
           <a
             onClick={() => getAllContacts(currentPage - 1)}
@@ -26,15 +26,15 @@ const ContactList = ({ data, currentPage, getAllContacts }) => {
             &laquo;
           </a>
           {data &&
-            [...Array(data.totalPages).keys()].map((page, index) => {
+            [...Array(data.totalPages).keys()].map((page, index) => 
               <a
-                onClick={getAllContacts(page)}
+                onClick={()=>getAllContacts(page)}
                 className={currentPage === page ? "active" : ""}
                 key={page}
               >
                 {page + 1}
-              </a>;
-            })}
+              </a>
+            )}
           <a
             onClick={() => getAllContacts(currentPage + 1)}
             className={data.totalPages === currentPage + 1 ? "disabled" : ""}

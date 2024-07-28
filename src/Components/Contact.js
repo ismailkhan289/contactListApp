@@ -2,8 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const Contact = ({ contact }) => {
+  // console.log(contact);
   return (
-    // eslint-disable-next-line no-template-curly-in-string
     <Link to={`/contacts/${contact.id}`} className="contact__item">
       <div className="contact__header">
         <div className="contact__image">
@@ -11,7 +11,7 @@ const Contact = ({ contact }) => {
         </div>
         <div className="contact__details">
           <div className="contact_name">{contact.name.substring(0, 15)}</div>
-          <div className="contact_title">{contact.title}</div>
+          <div className="contact_title">{contact.titles}</div>
         </div>
       </div>
       <div className="contact__body">
