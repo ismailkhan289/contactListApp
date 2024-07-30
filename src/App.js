@@ -1,10 +1,12 @@
-import "./App.css";
+import "react-toastify/dist/ReactToastify.css";
 import { useEffect, useRef, useState } from "react";
 import { getContacts, saveContact, updatePhoto } from "./api/ContactService";
 import Header from "./Components/Header";
 import ContactList from "./Components/ContactList";
 import { Routes, Route, Navigate } from "react-router-dom";
 import ContactDetails from "./Components/ContactDetails";
+import { toastError, toastSuccess } from "./api/ToastService";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const [data, setData] = useState({}); //This data will be set when the data is fetch
@@ -18,9 +20,10 @@ function App() {
       setCurrentPage(page);
       const { data } = await getContacts(page, size);
       setData(data);
-      console.log(data);
+      // console.log(data);
     } catch (error) {
       console.log(error);
+      toastError(error.message);
     }
   };
 
@@ -61,6 +64,7 @@ function App() {
       formData.append("id", data.id);
       //here we are sending the photo along with id of the current saving contact
        await updatePhoto(formData);
+      toastSuccess("Contact is added");
       // console.log(photoUrl);
       //closing the toggleModal
       toggleModal(false);
@@ -81,6 +85,7 @@ function App() {
       getAllContacts();
     } catch (error) {
       console.log(error);
+      toastError(error.message);
     }
   };
   // Modal Section ends here
@@ -89,8 +94,8 @@ function App() {
 
   const updateContact= async(contactDate)=>{
     try {
-      const {data}=await saveContact(contactDate);
-      console.log(data);
+      await saveContact(contactDate);
+      //console.log(data);
     } catch (error) {
       
     }
@@ -103,10 +108,12 @@ function App() {
     } catch (error) {      
     }
   };
+
   //when the page is rendered we will throw this function using useEffect
   useEffect(() => {
     getAllContacts();
   }, []);
+  
   return (
     <>
       {/* About Components header Component is showing at the top bind, whereas ContactList and 
@@ -235,6 +242,7 @@ function App() {
           </form>
         </div>
       </dialog>
+      <ToastContainer />
     </>
   );
 }
